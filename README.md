@@ -42,7 +42,7 @@ echo 'export GEMINI_API_KEY="your_api_key_here"' >> ~/.zshrc && source ~/.zshrc
 [System.Environment]::SetEnvironmentVariable('GEMINI_API_KEY', 'your_api_key_here', 'User')
 ```
 
-> Note: Restart your terminal after setting the key on Windows.
+> Note: Run as administrator and restart your terminal after setting the key on Windows.
 
 ## 🛠️ Usage
 
