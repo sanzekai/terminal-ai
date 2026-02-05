@@ -39,3 +39,4 @@ echo.
 echo ✅ Installed successfully!
 echo 💡 Please RESTART your terminal to use 'ask'.
 pause
+
