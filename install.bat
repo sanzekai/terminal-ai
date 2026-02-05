@@ -1,7 +1,7 @@
 @echo off
 set "USER=sanzekai"
 set "REPO=terminal-ai"
-set "URL=https://github.com/%USER%/%REPO%/releases/latest/download/ask.exe"
+set "URL=https://github.com/%USER%/%REPO%/releases/latest/ask-win-x64.exe"
 
 echo 🚀 Starting Sanzekai AI installation for Windows...
 
@@ -22,4 +22,5 @@ setx PATH "%PATH%;C:\sanzekai-cli" >nul
 echo.
 echo ✅ Installed! Restart terminal and run: ask
 pause
+
 
