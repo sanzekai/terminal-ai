@@ -1,29 +1,45 @@
 #!/bin/bash
+set -e  # Stop kalau ada error
 
-# Sanzekai GitHub Config
 USER="sanzekai"
 REPO="terminal-ai"
 BINARY_NAME="ask"
 
-echo "🚀 Starting installation of $BINARY_NAME from $USER/$REPO..."
+echo "🚀 Installing $BINARY_NAME from $USER/$REPO..."
 
-# 1. OS Detection
-OS_TYPE=$(uname -s | tr '[:upper:]' '[:lower:]')
-if [ "$OS_TYPE" == "darwin" ]; then
-    URL="https://github.com/$USER/$REPO/releases/latest/download/ask-mac"
-    echo "💻 Detected OS: macOS"
-else
-    URL="https://github.com/$USER/$REPO/releases/latest/download/ask-linux"
-    echo "🐧 Detected OS: Linux"
+# Detect OS
+OS_TYPE=$(uname -s)
+ARCH_TYPE=$(uname -m)
+
+case "$OS_TYPE" in
+  Darwin) OS="mac";;
+  Linux)  OS="linux";;
+  *) echo "❌ Unsupported OS"; exit 1;;
+esac
+
+# Detect Architecture
+case "$ARCH_TYPE" in
+  x86_64) ARCH="x64";;
+  arm64|aarch64) ARCH="arm64";;
+  *) echo "❌ Unsupported architecture"; exit 1;;
+esac
+
+URL="https://github.com/$USER/$REPO/releases/latest/download/${BINARY_NAME}-${OS}-${ARCH}"
+
+echo "💻 OS: $OS | 🧠 ARCH: $ARCH"
+echo "📥 Downloading..."
+
+if ! command -v curl &> /dev/null; then
+    echo "❌ curl not installed"
+    exit 1
 fi
 
-# 2. Download Binary
-echo "📥 Downloading pre-compiled binary..."
-curl -L -o $BINARY_NAME $URL
+curl -fL -o $BINARY_NAME "$URL"
 
-# 3. Setup and Move
 chmod +x $BINARY_NAME
-echo "📂 Moving binary to /usr/local/bin (sudo required)..."
-sudo mv $BINARY_NAME /usr/local/bin/$BINARY_NAME
 
-echo "✅ Success! You can now use '$BINARY_NAME' anywhere in your terminal."
+INSTALL_DIR="/usr/local/bin"
+echo "📂 Installing to $INSTALL_DIR (sudo needed)..."
+sudo mv $BINARY_NAME "$INSTALL_DIR/$BINARY_NAME"
+
+echo "✅ Done. Run '$BINARY_NAME' anywhere."
