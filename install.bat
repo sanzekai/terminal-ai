@@ -1,42 +1,46 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
 
+:: Konfigurasi
 set "USER=sanzekai"
 set "REPO=terminal-ai"
-:: Using the direct link you provided
-set "DL_URL=https://github.com/sanzekai/terminal-ai/releases/download/v1.0.0/ask-win-x64.exe"
-set "BIN_DIR=C:\sanzekai-cli"
+set "TAG=v1.0.0"
+set "URL=https://github.com/%USER%/%REPO%/releases/download/%TAG%/ask-win-x64.exe"
+set "FOLDER=C:\sanzekai-cli"
 
-echo 🚀 Starting Sanzekai AI installation for Windows...
+echo 🚀 Memulai instalasi Sanzekai AI untuk Windows...
 
-:: 1. Create directory if it doesn't exist
-if not exist "%BIN_DIR%" (
-    mkdir "%BIN_DIR%"
+:: 1. Buat folder kalau belum ada
+if not exist "%FOLDER%" (
+    echo 📂 Membuat direktori %FOLDER%...
+    mkdir "%FOLDER%"
 )
 
-echo 📥 Downloading binary...
-:: Using -f to fail on 404 and -L to follow redirects
-curl -L -f -o "%BIN_DIR%\ask.exe" "%DL_URL%"
+:: 2. Hapus file lama kalau ada (biar nggak bentrok/permission denied)
+if exist "%FOLDER%\ask.exe" (
+    del /f /q "%FOLDER%\ask.exe" >nul 2>&1
+)
+
+echo 📥 Sedang mengunduh binary dari GitHub...
+:: Pakai kutip di "%URL%" supaya nggak error kalau ada karakter spesial
+curl -L -f -o "%FOLDER%\ask.exe" "%URL%"
 
 if %ERRORLEVEL% NEQ 0 (
     echo.
-    echo ❌ Download failed. 
-    echo Please check if this link is public: %DL_URL%
+    echo ❌ Download gagal! Cek koneksi atau link GitHub kamu:
+    echo %URL%
     pause
     exit /b
 )
 
-:: 2. Add to PATH (Permanent)
-echo %PATH% | findstr /I "%BIN_DIR%" >nul
+:: 3. Masukkan ke PATH supaya bisa dipanggil 'ask' dari mana saja
+echo %PATH% | findstr /I "%FOLDER%" >nul
 if %ERRORLEVEL% NEQ 0 (
-    echo ⚙️ Adding %BIN_DIR% to PATH...
-    setx PATH "%PATH%;%BIN_DIR%" /M >nul 2>&1
-    :: If /M (system wide) fails, try user path
-    if %ERRORLEVEL% NEQ 0 setx PATH "%PATH%;%BIN_DIR%"
+    echo ⚙️ Menambahkan %FOLDER% ke PATH...
+    setx PATH "%PATH%;%FOLDER%"
 )
 
 echo.
-echo ✅ Installed successfully!
-echo 💡 Please RESTART your terminal to use 'ask'.
+echo ✅ Berhasil Terpasang! 
+echo 💡 RESTART Terminal (atau VS Code) kamu, lalu ketik: ask
 pause
-
