@@ -51,7 +51,7 @@ Once installed, you can use the ask command from anywhere:
 1. General Questions
 
 ```Bash
-ask "how to create a symbolic link in linux?"
+ask "how to download more ram?"
 ```
 
 2. Installation Helper
